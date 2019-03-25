@@ -22,7 +22,7 @@ public class Seller implements Serializable{
 		this.email = email;
 		this.birthDate = birthDate;
 		this.baseSalary = baseSalary;
-		this.department = department;
+		this.department = department ;
 	}
 
 	public Integer getId() {
