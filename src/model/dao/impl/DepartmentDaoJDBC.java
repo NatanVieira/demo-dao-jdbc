@@ -58,7 +58,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 			st = conn.prepareStatement(
 										"update department "
 										+ "set Name = ? "
-										+ "where id = ?");
+										+ "where id = ?",
+										Statement.RETURN_GENERATED_KEYS);
 			st.setString(1,obj.getName());
 			st.setInt(2, obj.getId());
 			st.executeUpdate();
@@ -96,11 +97,10 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		try {
 			st = conn.prepareStatement(
 										"select * from department  "
-										+ "where id = ?",
-										Statement.RETURN_GENERATED_KEYS);
+										+ "where id = ?");
 			st.setInt(1, id);
-			st.executeUpdate();
-			rs = st.getGeneratedKeys();
+			
+			rs = st.executeQuery();
 			if(rs.next()) {
 				Department obj = new Department(rs.getInt("Id"), rs.getString("Name"));
 				return obj;
@@ -122,17 +122,14 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement(
-										"select * from department ",
-										Statement.RETURN_GENERATED_KEYS);
-			st.executeUpdate();
-			rs = st.getGeneratedKeys();
+			st = conn.prepareStatement("select * from department ");
+			rs = st.executeQuery();
 			List<Department> list = new ArrayList<>();
 			while(rs.next()) {
 				Department obj = new Department(rs.getInt("Id"), rs.getString("Name"));
 				list.add(obj);
 			}
-			return null;
+			return list;
 		}
 		catch(SQLException e) {
 			throw new DbException(e.getMessage());
